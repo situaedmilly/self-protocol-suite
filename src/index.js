@@ -9,3 +9,4 @@ export * from './continuity.js';
 export * from './state-machine.js';
 export * from './authority.js';
 export * from './evidence.js';
+export * from './ir.js';
