@@ -67,3 +67,63 @@ See `specifications/SELF-IR-CORE-v0.md` for the complete formal specification.
 SELF IR Core v0 is the first artifact produced inside the Hyperbolic Chamber — a space where engineering intent becomes machine semantics before execution.
 
 Future adoption seams will be compiled from this IR instead of from prose English.
+
+## SELF Compiler Boundary v0
+
+The compiler boundary is the seam that turns validated SELF IR into a deterministic, executor-neutral execution plan — and stops. It describes work; it does not perform work.
+
+### Purpose
+
+An implementation may consume constitutional meaning. It may never become the source of constitutional meaning. `compileIRToExecutionPlan` is a pure function: same canonical IR in, same canonical execution plan out, with no executor, dispatcher, tool invocation, or repository mutation reachable from within it.
+
+### Usage
+
+```js
+import { compileInstructionToIR } from 'self-protocol-suite';
+import { compileIRToExecutionPlan, validateExecutionPlan } from 'self-protocol-suite';
+import { validateExecutorContract, validateExecutionReceiptAgainstPlan } from 'self-protocol-suite';
+
+const ir = compileInstructionToIR({
+  verb: 'IMPLEMENT',
+  subject: 'CommandRoutePersistenceGuard',
+  target: 'Kernel',
+  source: 'ProtocolCore',
+  authorityClass: 'BOUNDED_MUTATION',
+  preserve: ['KernelAPI'],
+  files: ['persistence/pending-proposals.js', 'test/pending-proposals.test.js'],
+  evidence: ['DIFFERENTIAL_TESTS', 'FULL_CONSUMER_SUITE', 'PROTOCOL_SUITE'],
+  deliver: ['COMMIT', 'PUSH_BRANCH', 'OPEN_DRAFT_PR'],
+  stopBefore: ['MERGE_MAIN'],
+});
+
+const plan = compileIRToExecutionPlan(ir);
+// plan is a deterministic, closed-vocabulary SELF_EXECUTION_PLAN. Nothing executes it.
+```
+
+### API
+
+- `compileIRToExecutionPlan(ir)` — Compile validated SELF IR into a deterministic, normalized execution plan. Throws on any attempt to widen authority, widen scope, drop evidence, or reorder continuation.
+- `validateExecutionPlan(plan)` — Structurally validate an execution plan. Throws `ExecutionPlanError` on failure.
+- `normalizeExecutionPlan(plan)` — Normalize an already-valid execution plan to canonical, frozen form.
+- `validateExecutorContract(contract)` — Validate that a declared executor contract carries every required obligation and prohibition, with no overlap.
+- `validateExecutionReceiptAgainstPlan(plan, receipt)` — Prove an execution receipt is well-formed, identity-preserving, scope-conformant, and evidenced. This proves structural acceptance only — never semantic correctness of the outcome.
+
+### Specification
+
+See `specifications/SELF-COMPILER-BOUNDARY-v0.md` for the complete formal specification.
+
+### Chamber Law
+
+```
+Constitution defines meaning
+        ↓
+IR captures lawful intent
+        ↓
+Compiler produces constrained plans
+        ↓
+Adapters translate
+        ↓
+Executors remain replaceable
+```
+
+An implementation may consume constitutional meaning, but it may never become the source of constitutional meaning.

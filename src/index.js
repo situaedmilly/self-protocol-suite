@@ -10,3 +10,6 @@ export * from './state-machine.js';
 export * from './authority.js';
 export * from './evidence.js';
 export * from './ir.js';
+export * from './execution-plan.js';
+export * from './compiler.js';
+export * from './executor-contract.js';
