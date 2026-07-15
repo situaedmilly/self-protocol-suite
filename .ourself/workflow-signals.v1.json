@@ -1,0 +1,21 @@
+{
+  "contract": "WORKFLOWEXECUTION_SIGNAL",
+  "version": "v1",
+  "realm": "self-protocol-suite",
+  "canonical_spec": "specifications/WORKFLOW-EXECUTION-SIGNAL-HIERARCHY-v1.md",
+  "resolver": "src/workflow-signal.js",
+  "signals": [
+    {"name":"STOP_SIGNAL","priority":100},
+    {"name":"AUTHORITY_SIGNAL","priority":90},
+    {"name":"OPERATING_SIGNAL","priority":80},
+    {"name":"OBJECTIVE_SIGNAL","priority":70},
+    {"name":"INSPECTION_SIGNAL","priority":60},
+    {"name":"MUTATION_SIGNAL","priority":50},
+    {"name":"VERIFICATION_SIGNAL","priority":40},
+    {"name":"SEAL_SIGNAL","priority":30},
+    {"name":"FOUNDATION_SIGNAL","priority":10}
+  ],
+  "unclassified_action": "STOP_BEFORE_INSPECTION",
+  "unknown_signal_action": "FAIL_CLOSED",
+  "signal_shift_for_session_posture": "OPERATING_SIGNAL"
+}
