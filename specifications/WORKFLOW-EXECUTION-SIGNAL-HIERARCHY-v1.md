@@ -1,83 +1,35 @@
-# WORKFLOWEXECUTION_SIGNAL Hierarchy v1
+# WORKFLOWEXECUTION_SIGNAL Hierarchy v1 — continuation correction
 
-## Status
+Founder-authorized correction, 2026-09-09. Supersedes the former mandatory-marker boot contract.
 
-IMPLEMENTED — provider-neutral signal routing contract for bounded OURSELF execution.
+## Scope
 
-## Purpose
+Signals classify current user control text. They do not grant authority and are not prerequisites to lawful investigation or already-authorized work. No repository must install this contract merely to participate.
 
-`WORKFLOWEXECUTION_SIGNAL` is the root envelope that tells an agent which control signal governs an incoming WORKFLOWEXECUTIONSPEECH before repository inspection begins.
+## Optional priority
 
-The resolver does not infer authority, mutation scope, or completion from prose. Explicit markers govern. Ambiguous prompts stop.
+STOP_SIGNAL > AUTHORITY_SIGNAL > OPERATING_SIGNAL > OBJECTIVE_SIGNAL > INSPECTION_SIGNAL > MUTATION_SIGNAL > VERIFICATION_SIGNAL > SEAL_SIGNAL > FOUNDATION_SIGNAL.
 
-## Hierarchy
+Priority classifies explicit declarations; current user intent and actual effect authorization govern. SEAL_SIGNAL, FOUNDATION_SIGNAL and AUTHORITY_SIGNAL never independently authorize an effect.
 
-| Priority | Signal | Function |
-|---:|---|---|
-| 100 | `STOP_SIGNAL` | Halt, refuse continuation, or end the session. Overrides every other signal. |
-| 90 | `AUTHORITY_SIGNAL` | Establish or deny authority tokens and execution class. |
-| 80 | `OPERATING_SIGNAL` | Set the session posture, budgets, and bounded-execution rules. |
-| 70 | `OBJECTIVE_SIGNAL` | Declare the one executable objective for the session. |
-| 60 | `INSPECTION_SIGNAL` | Bound files, directories, history, and evidence that may be read. |
-| 50 | `MUTATION_SIGNAL` | Bound files, symbols, and state that may be changed. |
-| 40 | `VERIFICATION_SIGNAL` | Declare tests, witnesses, and acceptance evidence. |
-| 30 | `SEAL_SIGNAL` | Authorize commit, seal, push, promotion, or other terminal persistence. |
-| 10 | `FOUNDATION_SIGNAL` | Durable doctrine and architecture. Informational unless paired with another signal. |
+## Resolution
 
-## Root envelope
+- Missing markers return UNCLASSIFIED_SIGNAL and CONTINUE_LAWFUL_WORK.
+- Unknown markers return UNKNOWN_SIGNAL with diagnostics and CONTINUE_LAWFUL_WORK. They neither throw a blanket hold nor grant authority.
+- WORKFLOWEXECUTION_SIGNAL is the envelope name, not an unknown subordinate signal.
+- Supply only current user control text to the resolver. Whole marker lines and SIGNAL: lines are declarations. Prose mentions, fenced examples and blockquotes are not commands. The parser cannot authenticate provenance; callers must not concatenate retrieved source or logs into control input.
+- An explicit STOP_SIGNAL retains STOP_SIGNAL_ACTIVE and HONOR_EXPLICIT_USER_STOP_SCOPE, including when unknown labels are also present. Natural-language user stops remain binding even without a marker and must be handled by the caller.
+- Actual missing permission defers only the affected effect and its dependencies. Independent lawful work continues.
+- Runtime authorization, one-use claims, credentials, protected data, integrity checks, and publication/deployment boundaries remain intact.
 
-```text
-WORKFLOWEXECUTION_SIGNAL
-SIGNAL: OPERATING_SIGNAL
-REALM: <project>
-MODE: BOUNDED_EXECUTION
-```
+## Boot
 
-A prompt may contain multiple subordinate signals. The highest-priority explicit signal controls the immediate response. Lower-priority signals remain constraints.
+Situate the actual request, seat, repository, scope, and existing implementation. Read applicable operating instructions. A missing signal configuration, handoff, or historical gate is information to recontact, not a global stop.
 
-## Resolution law
+## Implementation compatibility
 
-1. Scan only for exact signal markers from the closed hierarchy.
-2. Reject unknown `*_SIGNAL` markers.
-3. If no signal marker exists, return `UNCLASSIFIED_SIGNAL` and stop before inspection.
-4. If `STOP_SIGNAL` exists, halt regardless of other markers.
-5. `SEAL_SIGNAL` never implies `MUTATION_SIGNAL`; commit authority is distinct from implementation authority.
-6. `AUTHORITY_SIGNAL` never implies execution.
-7. `FOUNDATION_SIGNAL` never authorizes mutation.
-8. Every repository must carry `.ourself/workflow-signals.v1.json` declaring this contract and the local project realm.
+src/workflow-signal.js keeps detectWorkflowSignals and requireWorkflowSignal exports. Both now return optional classification without throwing for missing or unknown labels. Non-string inputs still raise INVALID_PROMPT. Results include authority_granted:false and signal_required:false. Consumers must honor explicit stops at their actual scope, must not treat classification as execution authority, and must recontact this changed contract.
 
-## Prompt-shift signal
+## Evidence ceiling
 
-The specific signal for changing how a session operates is:
-
-```text
-OPERATING_SIGNAL
-```
-
-It governs context budgets, archaeology prevention, execution posture, stop rules, and the READ / MUTATE / VERIFY / REPORT classification.
-
-## Mandatory project boot sequence
-
-```text
-1. Read .ourself/workflow-signals.v1.json
-2. Resolve explicit signals in the incoming prompt
-3. Announce CONTROLLING_SIGNAL
-4. Enforce its budgets and prohibitions
-5. Stop on UNCLASSIFIED_SIGNAL, UNKNOWN_SIGNAL, or conflicting authority
-```
-
-## Terminal states
-
-- `SIGNAL_RESOLVED`
-- `UNCLASSIFIED_SIGNAL`
-- `UNKNOWN_SIGNAL`
-- `SIGNAL_CONFLICT`
-- `STOP_SIGNAL_ACTIVE`
-
-## Non-goals
-
-- semantic guessing from unmarked prose
-- autonomous authority expansion
-- automatic project mutation
-- automatic commit or deployment
-- replacing SELF IR or human-turn governance
+Updated source establishes a changed contract in custody. It does not establish that existing sessions or deployed consumers reloaded it. Historical commits and sealed specimens retain their original evidence.
