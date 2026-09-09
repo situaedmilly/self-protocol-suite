@@ -1,76 +1,37 @@
-// WORKFLOWEXECUTION_SIGNAL v1
-// Exact-marker resolver. No semantic inference, no authority widening.
-
+// WORKFLOWEXECUTION_SIGNAL v1 — optional workflow classification, not authority.
 export const WORKFLOW_SIGNAL_VERSION = 'v1';
-
 export const SIGNAL_PRIORITY = Object.freeze({
-  STOP_SIGNAL: 100,
-  AUTHORITY_SIGNAL: 90,
-  OPERATING_SIGNAL: 80,
-  OBJECTIVE_SIGNAL: 70,
-  INSPECTION_SIGNAL: 60,
-  MUTATION_SIGNAL: 50,
-  VERIFICATION_SIGNAL: 40,
-  SEAL_SIGNAL: 30,
-  FOUNDATION_SIGNAL: 10,
+  STOP_SIGNAL:100, AUTHORITY_SIGNAL:90, OPERATING_SIGNAL:80,
+  OBJECTIVE_SIGNAL:70, INSPECTION_SIGNAL:60, MUTATION_SIGNAL:50,
+  VERIFICATION_SIGNAL:40, SEAL_SIGNAL:30, FOUNDATION_SIGNAL:10,
 });
-
-const SIGNAL_PATTERN = /\b([A-Z][A-Z0-9_]*_SIGNAL)\b/g;
-
 export class WorkflowSignalError extends Error {
-  constructor(code, message, context = {}) {
-    super(message);
-    this.name = 'WorkflowSignalError';
-    this.code = code;
-    this.context = Object.freeze({ ...context });
-  }
+  constructor(code,message,context={}) {super(message);this.name='WorkflowSignalError';this.code=code;this.context=Object.freeze({...context});}
 }
-
+// Supply current user control text, not concatenated retrieved documents or logs.
+// Only whole marker lines or SIGNAL: lines are declarations; fenced and quoted
+// examples are excluded. This parser cannot authenticate a text's origin.
 export function detectWorkflowSignals(prompt) {
-  if (typeof prompt !== 'string') {
-    throw new WorkflowSignalError('INVALID_PROMPT', 'Prompt must be a string');
+  if(typeof prompt!=='string')throw new WorkflowSignalError('INVALID_PROMPT','Prompt must be a string');
+  const found=new Set();let fence=null;
+  for(const raw of prompt.split(/\r?\n/)) {
+    const line=raw.trim();const delimiter=line.match(/^(`{3,}|~{3,})/);
+    if(delimiter){if(!fence)fence={char:delimiter[1][0],length:delimiter[1].length};else if(delimiter[1][0]===fence.char&&delimiter[1].length>=fence.length)fence=null;continue;}
+    if(fence||line.startsWith('>'))continue;
+    const declaration=line.replace(/^SIGNAL:\s*/, '');
+    if(!/^[A-Z][A-Z0-9_]*_SIGNAL(?:\s+[A-Z][A-Z0-9_]*_SIGNAL)*$/.test(declaration))continue;
+    for(const marker of declaration.split(/\s+/))if(marker!=='WORKFLOWEXECUTION_SIGNAL')found.add(marker);
   }
-
-  const discovered = [...new Set(prompt.match(SIGNAL_PATTERN) || [])].sort();
-  const unknown = discovered.filter((signal) => !(signal in SIGNAL_PRIORITY));
-
-  if (unknown.length > 0) {
-    throw new WorkflowSignalError(
-      'UNKNOWN_SIGNAL',
-      `Unknown workflow signal(s): ${unknown.join(', ')}`,
-      { unknown }
-    );
-  }
-
-  if (discovered.length === 0) {
-    return Object.freeze({
-      version: WORKFLOW_SIGNAL_VERSION,
-      state: 'UNCLASSIFIED_SIGNAL',
-      controlling_signal: null,
-      signals: Object.freeze([]),
-    });
-  }
-
-  const ordered = [...discovered].sort(
-    (a, b) => SIGNAL_PRIORITY[b] - SIGNAL_PRIORITY[a] || a.localeCompare(b)
-  );
-
-  const controlling = ordered[0];
-  return Object.freeze({
-    version: WORKFLOW_SIGNAL_VERSION,
-    state: controlling === 'STOP_SIGNAL' ? 'STOP_SIGNAL_ACTIVE' : 'SIGNAL_RESOLVED',
-    controlling_signal: controlling,
-    signals: Object.freeze(ordered),
+  const unknown=[...found].filter(s=>!Object.hasOwn(SIGNAL_PRIORITY,s)).sort();
+  const signals=[...found].filter(s=>Object.hasOwn(SIGNAL_PRIORITY,s)).sort((a,b)=>SIGNAL_PRIORITY[b]-SIGNAL_PRIORITY[a]||a.localeCompare(b));
+  const controlling=signals[0]??null;
+  const stop=controlling==='STOP_SIGNAL';
+  return Object.freeze({version:WORKFLOW_SIGNAL_VERSION,
+    state:stop?'STOP_SIGNAL_ACTIVE':unknown.length?'UNKNOWN_SIGNAL':controlling?'SIGNAL_RESOLVED':'UNCLASSIFIED_SIGNAL',
+    controlling_signal:controlling,signals:Object.freeze(signals),unknown_signals:Object.freeze(unknown),
+    session_continuation:stop?'HONOR_EXPLICIT_USER_STOP_SCOPE':'CONTINUE_LAWFUL_WORK',
+    authority_granted:false,signal_required:false,
   });
 }
-
-export function requireWorkflowSignal(prompt) {
-  const result = detectWorkflowSignals(prompt);
-  if (result.state === 'UNCLASSIFIED_SIGNAL') {
-    throw new WorkflowSignalError(
-      'UNCLASSIFIED_SIGNAL',
-      'No explicit WORKFLOWEXECUTION_SIGNAL marker was found. Stop before inspection.'
-    );
-  }
-  return result;
-}
+// Compatibility export: missing/unknown labels no longer throw blanket holds.
+export function requireWorkflowSignal(prompt){return detectWorkflowSignals(prompt);}
