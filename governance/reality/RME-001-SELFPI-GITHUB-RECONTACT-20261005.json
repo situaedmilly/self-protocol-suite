@@ -1,0 +1,102 @@
+{
+  "schema": "OURSELFECOSYSTEM-RECONTACT-v1",
+  "recontact_id": "RME-001.1-SELFPI-GITHUB-20261005",
+  "reality": "CHAMBOXREALITY",
+  "classification": "FOREIGN_RECONTACT_MATTER",
+  "source_layers": [
+    {
+      "layer": "SELFPI_ANDROID_SESSION",
+      "status": "DECLARED_FROM_USER_SUPPLIED_RECONTACT",
+      "authority": "UNKNOWN",
+      "runtime_binding": "NOT_RECONTACTED_BY_CURRENT_EXECUTION_SURFACE"
+    },
+    {
+      "layer": "GITHUB",
+      "status": "OBSERVED",
+      "repositories": [
+        {
+          "repository": "situaedmilly/ourself-core",
+          "ref": "main",
+          "observed": "TNC governor and OURSELFTELLIGENCE governance matter present"
+        },
+        {
+          "repository": "situaedmilly/self-protocol-suite",
+          "ref": "main",
+          "observed": "SELF IR, authority validation, evidence, state-machine, continuity contracts present"
+        }
+      ]
+    }
+  ],
+  "matter": [
+    {
+      "id": "LOCAL_AUDIO_ACTUATION",
+      "status": "DECLARED",
+      "production_claim": "PRODUCTION_GRADE_VERIFIED",
+      "evidence_refs": [
+        "RECEIPT-AUDIO-L3-1557e0c6...",
+        "MEM-AUDIO-OUT-L3-001",
+        "NODE-JOIN-AUDIO-OUT",
+        "state.frozen.json"
+      ],
+      "admission": "NOT_INDEPENDENTLY_REWITNESSED_IN_CURRENT_EXECUTION_SURFACE"
+    },
+    {
+      "id": "OURSELFD_POLICY",
+      "status": "DECLARED",
+      "claimed_runtime": "127.0.0.1:11435",
+      "claimed_allowed_actions": [
+        "OLLAMA_GENERATE",
+        "AUDIO_OUTPUT_ACTUATION"
+      ],
+      "claimed_allowed_models": [
+        "llama3:latest",
+        "ourself-qwen25-7b-kernel:latest",
+        "OURSELF-AUDIO-V1"
+      ],
+      "admission": "NOT_INDEPENDENTLY_REWITNESSED_IN_CURRENT_EXECUTION_SURFACE"
+    },
+    {
+      "id": "ADMISSION_PROBE",
+      "status": "DECLARED_FORENSIC_EVENT",
+      "claimed_failure": "ACTION_NOT_ALLOWLISTED",
+      "corrective_transition": "ACTION-SPECIFIC AUTHORIZATION"
+    },
+    {
+      "id": "ACTION_ID_MISMATCH",
+      "status": "DECLARED_FORENSIC_EVENT",
+      "invariant": "AUTHORIZATION.action_id == REQUEST.action_id",
+      "corrective_transition": "ISSUE AUTHORIZATION FOR EXACT PROBE ACTION"
+    }
+  ],
+  "provenance_claims": {
+    "mcb_06_35_vector_claim": {
+      "instance": "UNKNOWN",
+      "vectors": 50,
+      "unresolved": 35,
+      "status": "UNCORROBORATED"
+    },
+    "mcb_06_materialized_instance": {
+      "instance": "MCB-06-DIFF-001",
+      "vectors": 80,
+      "exact_match": 80,
+      "unresolved": 0,
+      "forensic_artifacts": 3,
+      "status": "PREVIOUSLY_OBSERVED_ADMITTED",
+      "current_runtime_recontact": "NOT_FOUND_IN_CURRENT /mnt/data"
+    }
+  },
+  "relationship": "UNRESOLVED_PROVENANCE",
+  "next_admissible_transition": "RME_RECONTACT_AND_BIND",
+  "terminal_predicate": {
+    "id": "FOUNDER_USER_CAPABLE_UTILIZATION",
+    "expression": [
+      "DISCOVERABLE",
+      "BOOTABLE",
+      "EXECUTABLE",
+      "OBSERVABLE",
+      "EVIDENCE_BOUND",
+      "REPEATABLE",
+      "RECOVERABLE"
+    ]
+  }
+}
