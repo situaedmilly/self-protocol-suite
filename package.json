@@ -9,6 +9,8 @@
     "node": ">=18"
   },
   "scripts": {
-    "test": "node --test \"test/*.test.js\""
+    "test": "node --test \"test/*.test.js\"",
+    "protocolself:verify": "node --input-type=module -e \"import { loadProtocolSelfRegistry } from './src/protocolself-registry.js'; console.log(loadProtocolSelfRegistry().protocols.length)\"",
+    "protocolself:boot": "node --input-type=module -e \"import { bootProtocolSelfRegistry } from './src/protocolself-registry.js'; console.log(JSON.stringify(bootProtocolSelfRegistry(), null, 2))\""
   }
 }
