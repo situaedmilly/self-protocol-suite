@@ -11,3 +11,4 @@ export * from './authority.js';
 export * from './evidence.js';
 export * from './ir.js';
 export * from './workflow-signal.js';
+export * from './protocolself-registry.js';
