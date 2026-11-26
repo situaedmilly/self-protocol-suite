@@ -67,3 +67,7 @@ See `specifications/SELF-IR-CORE-v0.md` for the complete formal specification.
 SELF IR Core v0 is the first artifact produced inside the Hyperbolic Chamber — a space where engineering intent becomes machine semantics before execution.
 
 Future adoption seams will be compiled from this IR instead of from prose English.
+
+## OURSELFCOMM ProtocolSELF-18
+
+This repository includes the additive `protocols/protocolself-18.v0.1.json` registry projection. See `PROTOCOLSELF-18-BOOT.md` for source identity, consumer role, boot boundary, and admission rules. Registry presence does not activate listeners or authorize transport.
